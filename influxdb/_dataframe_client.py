@@ -145,7 +145,7 @@ class DataFrameClient(InfluxDBClient):
 
         """
         results = super(DataFrameClient, self).query(query,
-                                                     chunked=chunked
+                                                     chunked=chunked,
                                                      chunk_size=chunk_size,
                                                      database=database)
         if query.upper().startswith("SELECT"):
