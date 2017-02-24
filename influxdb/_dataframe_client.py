@@ -156,8 +156,9 @@ class DataFrameClient(InfluxDBClient):
         else:
             return results
 
-    def _to_dataframe(self, rs):
-        result = {}
+    def _to_dataframe(rs):
+        from collections import defaultdict
+        result = defaultdict(pd.DataFrame)
         if isinstance(rs, list):
             return map(self._to_dataframe, rs)
         for key, data in rs.items():
@@ -171,7 +172,7 @@ class DataFrameClient(InfluxDBClient):
             df.set_index('time', inplace=True)
             df.index = df.index.tz_localize('UTC')
             df.index.name = None
-            result[key] = df
+            result[key] = result[key].append(df)
         return result
 
     def _convert_dataframe_to_json(self,
