@@ -131,15 +131,23 @@ class DataFrameClient(InfluxDBClient):
                 protocol=protocol)
             return True
 
-    def query(self, query, chunked=False, database=None):
+    def query(self, query, chunked=False, chunk_size=0, database=None):
         """
         Quering data into a DataFrame.
 
-        :param chunked: [Optional, default=False] True if the data shall be
-            retrieved in chunks, False otherwise.
+        :param chunked: Enable to use chunked responses from InfluxDB.
+            With ``chunked`` enabled, one ResultSet is returned per chunk
+            containing all results within that chunk
+        :type chunked: bool
+
+        :param chunk_size: Size of each chunk to tell InfluxDB to use.
+        :type chunk_size: int
 
         """
-        results = super(DataFrameClient, self).query(query, database=database)
+        results = super(DataFrameClient, self).query(query,
+                                                     chunked=chunked
+                                                     chunk_size=chunk_size,
+                                                     database=database)
         if query.upper().startswith("SELECT"):
             if len(results) > 0:
                 return self._to_dataframe(results)
