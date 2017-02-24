@@ -156,7 +156,7 @@ class DataFrameClient(InfluxDBClient):
         else:
             return results
 
-    def _to_dataframe(rs):
+    def _to_dataframe(self, rs):
         from collections import defaultdict
         result = defaultdict(pd.DataFrame)
         if isinstance(rs, list):
